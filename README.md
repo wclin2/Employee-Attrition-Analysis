@@ -3,8 +3,7 @@
 ## Why is this imporatnt?
 
 > **"You take away our top 20 emplyees and  
-we becomde a mediocre company"**  
-> 							- Bill Gates
+     we becomde a mediocre company"** - Bill Gates
 
 Employee turnover is a huge problem becasue employee is organizations' most valualbe resources. That's begin with the employee value overtime.
 
@@ -59,7 +58,9 @@ Therefore, the **Estimated Attrition Cost Per Employee** would be **$78.483**
 If 200 employees turnover, it would cost the company **$15.7M Per Year**
 
 
+## Thanks
 
+This project is one of the courses from [Business Science University](https://www.business-science.io/). Really learned a lot from this course!!
 
 
 
