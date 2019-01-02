@@ -2,8 +2,7 @@
 
 ## Why is this imporatnt?
 
-> **"You take away our top 20 emplyees and we becomde a mediocre company"**  
-> - Bill Gates
+> **"You take away our top 20 emplyees and we becomde a mediocre company"**  -Bill Gates
 
 Employee turnover is a huge problem becasue employee is organizations' most valualbe resources. That's begin with the employee value overtime.
 
