@@ -11,21 +11,21 @@ Employee turnover is a huge problem becasue employee is organizations' most valu
 
 [source](https://www.linkedin.com/pulse/20130816200159-131079-employee-retention-now-a-big-issue-why-the-tide-has-turned/)
 
-What this chart shows us is that as time continues, the organization's value increases while the emplyee become even more productive member.  
-Let's simplify the plots and see what happen if an emplyee leaves
+What this chart shows us is that as time continues, the organization's value increases while the emplyee become even more productive member. Let's simplify the plots and see what happen if an emplyee leaves
 
 ![](Pictures/2.png)
 
 [source: Business Science University](https://www.business-science.io/)
 
-We can clearly find that as an employee leaves, organizations have to go through a period of hiring process, training process etc. In this period, the productivity is lost. Usually, some of the cost of attrition is hidden. It is hard to measure.  Next, we will define how to calculate the cost.
+We can clearly find that as an employee leaves, organizations have to go through a period of hiring process, training process etc. In this period, the productivity is lost. Usually, some of the cost of attrition is hidden. It is hard to measure. Next, we will define how to calculate the cost.
 
 **Cost Calculation**  
 - Direct Costs
 - Productivity Costs (Hidden Costs)
 - Salary + Benefits
 
-**1. Direct Costs**  
+**1. Direct Costs**
+
 | Item | Values |
 | --- | --- |
 | 1. Average Separation | $500 | 
@@ -34,7 +34,8 @@ We can clearly find that as an employee leaves, organizations have to go through
 | 4. Average Placement (New supplies, Training ...) | $3,500 | 
 | Total (1. + 2. + 3. + 4.)| $18,900 |
 
-**2. Productivity Costs (Hidden Costs)**  
+**2. Productivity Costs (Hidden Costs)**
+
 | Item | Values |
 | --- | --- |
 | 1. Annual Revenue Per Employee | $250,000 | 
@@ -44,7 +45,8 @@ We can clearly find that as an employee leaves, organizations have to go through
 | 5. Effectiveness During Onboarding / Training | 50% |
 | Total (1. / 2. x (3. + 4. x 5.))| $72,917 |
 
-**3. Savings of Salary + Benefits**  
+**3. Savings of Salary + Benefits**
+
 | Item | Values |
 | --- | --- |
 | 1. Average Salary + Benefits | $80,000 | 
