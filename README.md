@@ -2,7 +2,7 @@
 
 ## Why is this imporatnt?
 
-> **"You take away our top 20 emplyees and we becomde a mediocre company"**  -Bill Gates
+> **"You take away our top 20 emplyees and we becomde a mediocre company"**  - Bill Gates
 
 Employee turnover is a huge problem becasue employee is organizations' most valualbe resources. That's begin with the employee value overtime.
 
@@ -10,7 +10,7 @@ Employee turnover is a huge problem becasue employee is organizations' most valu
 
 [source](https://www.linkedin.com/pulse/20130816200159-131079-employee-retention-now-a-big-issue-why-the-tide-has-turned/)
 
-What this chart shows us is that as time continues, the organization's value increases while the emplyee become even more productive member. Let's simplify the plots and see what happen if an emplyee leaves
+What this chart shows us is that as time continues, the organization's value increases while the emplyee become even more productive member. Let's simplify the plots and see what happen if an emplyee leaves.
 
 ![](Pictures/2.png)
 
@@ -54,7 +54,7 @@ We can clearly find that as an employee leaves, organizations have to go through
 | Total (1. / 2. x 3.)| $13,333 |
 
 Therefore, the **Estimated Attrition Cost Per Employee** would be **$78.483**  
-If 200 employees turnover, it would cost the company **$15.7M Per Year**
+If 200 employees turnover, it would cost the company **$15.7M Per Year**.
 
 ## Data Understaninf & Preparation
 
@@ -65,9 +65,8 @@ First, we can use histogram plot to check the distribution of our predictors. Fr
 
 ![](Pictures/3.png)
 
-Second, we scale and center the predictors. In general scaling the data would not hurt the model performance. Also, some of the algorithms would benefit a lot by scaling, such as KMeans, SVM, Deep Learning ...
+Second, we scale and center the predictors. In general scaling the data would not hurt the model performance. Also, some of the algorithms would benefit a lot by scaling, such as KMeans, SVM, Deep Learning ... Third, we convert the categorical predictors into dummy variables since most of the algorithms need continuous inputs.
 
-Third, we convert the categorical predictors into dummy variables since most of the algorithms need continuous inputs  
 These problem can be solved by the R package <recipe>, then we plot the histogram again (Not include the dummy variables)
 
 ```
@@ -83,7 +82,32 @@ recipe_obj <- recipe(Attrition ~ ., data = train_readable_tbl) %>%
 
 ![](Pictures/4.png)
 
-##
+Last, we will conduct the correlation evaluation. Although some of the predictors might have non-linear relationship with the target values, knowing which predictor has large correlation with the target could still be beneficial for interpretation
+
+```
+train_tbl %>%
+  mutate_if(is.character, as.factor) %>%
+  mutate_if(is.factor, as.numeric) %>%
+  cor(use = 'pairwise.complete.obs') %>%
+  as.tibble() %>%
+  mutate(features = names(train_tbl)) %>%
+  select(features, Attrition_Yes) %>%
+  filter(!(features == 'Attrition_Yes')) %>%
+  mutate(features = as_factor(features)) %>%
+  mutate(features = fct_reorder(features, Attrition_Yes)) %>%
+  arrange(features) %>%
+  ggplot() +
+  geom_segment(aes(xend = 0, yend = features, x = Attrition_Yes, y = features)) +
+  geom_point(aes(x = Attrition_Yes, y = features)) +
+  geom_vline(xintercept = 0) +
+  geom_label(aes(label = round(Attrition_Yes,2), x = Attrition_Yes, y = features))
+```
+
+![](Pictures/5.png)
+
+## Modeling
+
+
 
 ## Thanks
 
