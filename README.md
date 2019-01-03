@@ -56,6 +56,10 @@ We can clearly find that as an employee leaves, organizations have to go through
 Therefore, the **Estimated Attrition Cost Per Employee** would be **$78.483**  
 If 200 employees turnover, it would cost the company **$15.7M Per Year**.
 
+## Data
+ 
+The Data has 1350 rows and 35 features (including target) which could be downloaded from [here](https://www.ibm.com/communities/analytics/watson-analytics-blog/hr-employee-attrition/). 
+
 ## Data Understaninf & Preparation
 
 First, we can use histogram plot to check the distribution of our predictors. From the below plot, we can notice that,
@@ -212,7 +216,7 @@ calculated_gain_lift_tbl <- ranked_predictions_tbl %>%
 
 From the above plot, we can find that we can simply get nearly 75% of gains by focusing on the top 25% of employees.
 
-## Feature Importance
+## Feature Weight
 
 In this section, we use R package `lime` to calculate the feature weights. `lime` is used to determine which featurs contribute to the prediction for a single observation or multiple observation (i.e. Local).  
 
@@ -248,6 +252,10 @@ plot_explanations(explanation)
 <img src="Pictures/10.png" width="600">
 
 From the above plot, we can see that the feature weights on the selected 20 people could be either **postive: support (green)** or **negative: against (red)**. For example, **OverTime = Yes** has **negative weights (against)** for not leaving and **positive weights (support)** for leaving.
+
+## Calculating The Expected ROI (Savings) Of A Policy Change
+
+
 
 ## Thanks
 
