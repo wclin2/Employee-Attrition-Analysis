@@ -276,18 +276,18 @@ First, we calculate the expected values with **OverTime**, and output the result
 
 Second, we calculate the expected values without **OverTime**, and output the results (the first 10) in table:
 
- | predict  |  No   |   Yes   | EmployeeNumber |  OverTime | attrition_cost | cost_of_policy_change | expected_attrition_cost |
- |    ---   |  ---  |  ---    |       ---      |     ---   |       ---      |          ---          |           ---           |
-     No      0.981    1.95e-2            228      No                 72979.               0            1420. 
-     No      0.952    4.82e-2           1278      No                 64663.            6466.           9586. 
-     No      0.999    8.84e-4           1250      No                 56259.               0              49.8
-     No      0.974    2.60e-2           2065      No                 81037.               0            2110. 
-     No      0.712    2.88e-1           1767      No                 86943.            8694.          33735. 
-     No      0.923    7.66e-2           1308      No                 87073.               0            6674. 
-     No      0.956    4.42e-2             18      No                 86495.               0            3819. 
-     No      0.988    1.23e-2            460      No                 79123.               0             975. 
-     No      0.995    5.10e-3           1369      No                 81091.               0             414. 
-     No      0.995    5.27e-3           1040      No                 79123.               0             417. 
+ | predict  |  No   |   Yes    | EmployeeNumber |  OverTime | attrition_cost  | cost_of_policy_change | expected_attrition_cost |
+ |    ---   |  ---  |  ---     |       ---      |     ---   |       ---       |          ---          |           ---           |
+ |    No      0.981 |   1.95e-2 |           228  |    No      |           72979. |              0        |    1420. |
+ |    No      0.952 |   4.82e-2 |          1278  |    No      |           64663. |           6466.       |    9586. |
+ |    No      0.999 |   8.84e-4 |          1250  |    No      |           56259. |              0        |     49.8 |
+ |    No      0.974 |   2.60e-2 |          2065  |    No      |           81037. |              0        |    2110. |
+ |    No      0.712 |   2.88e-1 |          1767  |    No      |           86943. |           8694.       |   33735. |
+ |    No      0.923 |   7.66e-2 |          1308  |    No      |           87073. |              0        |    6674. |
+ |    No      0.956 |   4.42e-2 |            18  |    No      |           86495. |              0        |    3819. |
+ |    No      0.988 |   1.23e-2 |           460  |    No      |           79123. |              0        |     975. |
+ |    No      0.995 |   5.10e-3 |          1369  |    No      |           81091. |              0        |     414. |
+ |    No      0.995 |   5.27e-3 |          1040  |    No      |           79123. |              0        |     417. |
 
 ## Thanks
 
