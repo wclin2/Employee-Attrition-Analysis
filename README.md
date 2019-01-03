@@ -165,13 +165,13 @@ performance_h2o <- h2o.performance(model, newdata = as.h2o(test_tbl))
 
 **Confusion Matrix on test set**
 
-| | No | Yes | Error | Rate |
+|  | No | Yes | Error Rate |
 | --- | --- | --- | --- |
 | No | 171 | 13 | 0.070652 = 13/184 |
 | Yes | 13 | 23 | 0.361111 = 13/36 |
 | Totals | 184 | 36 | 0.118182 = 26/220 |
 
-![](Pictures/6.pnh)
+![](Pictures/6.png)
 
 ## Thanks
 
