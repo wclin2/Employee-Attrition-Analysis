@@ -173,14 +173,13 @@ performance_h2o <- h2o.performance(model, newdata = as.h2o(test_tbl))
 
 ## Gain & Lift
 
-Gain & Lift Charts are a useful way of visualizing how good a predictive model is. Most Important thing is that Gain & Lift charts can be used help company make decision.  
-For example, let us assume that the company mails out ads in lots of 10,000. Based on these assumptions, if the company mails out 100,000 ads, a table summarizing the results it would obtain from this campaign is provided below
+Gain & Lift Charts are a useful way of visualizing how good a predictive model is. Most Important thing is that Gain & Lift charts can be used to help company make decision. For example, let us assume that the company mails out ads in lots of 10,000. Based on these assumptions, if the company mails out 100,000 ads, a table summarizing the results it would obtain from this campaign is provided below
 
-<img src="Pictures/7.png" width="200">
+<img src="Pictures/7.png" width="300">
 
 Now let us assume that the company build a predictive model using data from previous campaigns. "Response / No Response" is identified as the "target" field and various demographic, socio-economic and behavioral variables are used as predictors. As a result of the predictive model, the company is able to sort its entire prospect list in decreasing order of expected sales. Consequently, rather than mailing out its ads to a random bunch of 10,000 prospects, the company mails out its ads to the "most likely" 10,000 first, followed by the next 10,000 and so on. Following this method, the company generates the following results table:
 
-<img src="Pictures/8.png" width="200">
+<img src="Pictures/8.png" width="300">
 
 As can be seen, results from the second table are significantly better than those indicated in the first table. Which shows that the company can target the possible customers more precisely. [source: Explanation of Gain & Lift](http://themainstreamseer.blogspot.com/2012/07/understanding-and-interpreting-gain-and.html).
 
@@ -212,6 +211,42 @@ calculated_gain_lift_tbl <- ranked_predictions_tbl %>%
 
 From the above plot, we can find that we can simply get nearly 75% of gains by focusing on the top 25% of employees.
 
+## Feature Importance
+
+In this section, we use R package `lime` to calculate the feature weights. `lime` is used to determine which featurs contribute to the prediction for a single observation or multiple observation (i.e. Local).  
+
+```
+# Predict
+
+predictions_tbl <- model %>% 
+    h2o.predict(newdata = as.h2o(test_tbl)) %>%
+    as.tibble() %>%
+    bind_cols(
+        test_tbl %>%
+            select(Attrition, EmployeeNumber)
+    )
+
+# Calculate the weight of each featurs on the selected 20 people
+
+explanation <- test_tbl %>%
+    slice(1:20) %>%
+    select(-Attrition) %>%
+    lime::explain(
+        explainer = explainer,
+        n_labels   = 1,
+        n_features = 8,
+        n_permutations = 5000,
+        kernel_width   = 1
+    )
+
+# Plot the feature importance
+
+plot_explanations(explanation)
+```
+
+<img src="Pictures/10.png" width="500">
+
+From the above plot, we can see that the feature weights on the selected 20 people could be either **postive: support (green)** or **negative: against (red)**. For example, **OverTime = Yes** has negative weights (against) for not leaving and positive weights (support) for leaving.
 
 ## Thanks
 
