@@ -159,8 +159,6 @@ predictions = h2o.predict(model, newdata = as.h2o(test_tbl))
 # Get the performance
 
 performance_h2o <- h2o.performance(model, newdata = as.h2o(test_tbl))
-
-
 ```
 
 **Confusion Matrix on test set**
@@ -172,6 +170,46 @@ performance_h2o <- h2o.performance(model, newdata = as.h2o(test_tbl))
 | Totals | 184 | 36 | 0.118182 = 26/220 |
 
 ![](Pictures/6.png)
+
+## Gain & Lift
+
+Gain & Lift Charts are a useful way of visualizing how good a predictive model is. Most Important thing is that Gain & Lift charts can be used help company make decision.  
+For example, let us assume that the company mails out ads in lots of 10,000. Based on these assumptions, if the company mails out 100,000 ads, a table summarizing the results it would obtain from this campaign is provided below
+
+![](Pictures/7.png)
+
+Now let us assume that the company build a predictive model using data from previous campaigns. "Response / No Response" is identified as the "target" field and various demographic, socio-economic and behavioral variables are used as predictors. As a result of the predictive model, the company is able to sort its entire prospect list in decreasing order of expected sales. Consequently, rather than mailing out its ads to a random bunch of 10,000 prospects, the company mails out its ads to the "most likely" 10,000 first, followed by the next 10,000 and so on. Following this method, the company generates the following results table:
+
+![](Pictures/8.png)
+
+As can be seen, results from the second table are significantly better than those indicated in the first table. Which shows that the company can target the possible customers more precisely. [source: Explaination of Gain & Lift](http://themainstreamseer.blogspot.com/2012/07/understanding-and-interpreting-gain-and.html).
+
+We can calculate the Gain & Lift by the following codes:
+
+```
+calculated_gain_lift_tbl <- ranked_predictions_tbl %>%
+    mutate(ntile = ntile(Yes, n = 10)) %>%
+    group_by(ntile) %>%
+    summarise(
+        cases = n(),
+        responses = sum(Attrition == "Yes")
+    ) %>%
+    arrange(desc(ntile)) %>%
+    mutate(group = row_number()) %>%
+    select(group, cases, responses) %>%
+    mutate(
+        cumulative_responses = cumsum(responses),
+        pct_responses        = responses / sum(responses),
+        gain                 = cumsum(pct_responses),
+        cumulative_pct_cases = cumsum(cases) / sum(cases),
+        lift                 = gain / cumulative_pct_cases,
+        gain_baseline        = cumulative_pct_cases,
+        lift_baseline        = gain_baseline / cumulative_pct_cases
+    )
+```
+
+![](Pictures/9.png)
+
 
 ## Thanks
 
