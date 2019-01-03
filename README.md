@@ -1,5 +1,12 @@
 # Employee Attrition Analysis
 
+## Goal
+
+The goals of this post is to predict the probability of attrition for each employee and extract some business insights from the data such as calculating ROI and Gain & Lift, generating recommendations etc.  
+## Data
+ 
+The Data has 1350 rows and 35 features (including target) which could be downloaded from [here](https://www.ibm.com/communities/analytics/watson-analytics-blog/hr-employee-attrition/). 
+
 ## Why is this imporatnt?
 
 > **"You take away our top 20 emplyees and we becomde a mediocre company"**  - Bill Gates
@@ -56,9 +63,6 @@ We can clearly find that as an employee leaves, organizations have to go through
 Therefore, the **Estimated Attrition Cost Per Employee** would be **$78.483**  
 If 200 employees turnover, it would cost the company **$15.7M Per Year**.
 
-## Data
- 
-The Data has 1350 rows and 35 features (including target) which could be downloaded from [here](https://www.ibm.com/communities/analytics/watson-analytics-blog/hr-employee-attrition/). 
 
 ## Data Understaninf & Preparation
 
