@@ -120,7 +120,8 @@ train_tbl %>%
   geom_label(aes(label = round(Attrition_Yes,2), x = Attrition_Yes, y = features))
 ```
 
-<img src="Pictures/5.png" width="600">
+![](Pictures/5.png)
+
 
 ## Modeling
 
@@ -169,7 +170,7 @@ performance_h2o <- h2o.performance(model, newdata = as.h2o(test_tbl))
 | Yes | 13 | 23 | 0.361111 = 13/36 |
 | Totals | 184 | 36 | 0.118182 = 26/220 |
 
-![](Pictures/6.png)
+<img src="Pictures/6.png" width="600">
 
 ## Gain & Lift
 
@@ -246,7 +247,7 @@ plot_explanations(explanation)
 
 <img src="Pictures/10.png" width="600">
 
-From the above plot, we can see that the feature weights on the selected 20 people could be either **postive: support (green)** or **negative: against (red)**. For example, **OverTime = Yes** has negative weights (against) for not leaving and positive weights (support) for leaving.
+From the above plot, we can see that the feature weights on the selected 20 people could be either **postive: support (green)** or **negative: against (red)**. For example, **OverTime = Yes** has **negative weights (against)** for not leaving and **positive weights (support)** for leaving.
 
 ## Thanks
 
