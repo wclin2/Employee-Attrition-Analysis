@@ -377,6 +377,10 @@ ev_without_OT_tbl <- predictions_without_OT_tbl %>%
 - the total expected attrition cost without **OverTime** would be around 2714538
 - Therefore the company can save around $378450 (12.2% savings)
 
+## Recommendation
+
+(Continue)
+
 ## Thanks
 
 This project is one of the courses from [Business Science University](https://www.business-science.io/). Really learned a lot from this course!!
