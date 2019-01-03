@@ -124,9 +124,54 @@ train_tbl %>%
 
 ## Modeling
 
-In this section, we use the R package `h2o` to build the models.
+In this section, we use the R package `h2o` to build the models. There are many parameters that can be tunes to get better performance, but that is not the goal of this post. Therefore, I just use the default for the parameters.
+
+```
+# Train
+
+h2o.init()
+split_h2o <- h2o.splitFrame(as.h2o(train_tbl), ratios = c(0.85), seed = 1234)
+
+train_h2o <- split_h2o[[1]]
+valid_h2o <- split_h2o[[2]]
+test_h2o  <- as.h2o(test_tbl)
+
+y <- "Attrition"
+x <- setdiff(names(train_h2o), y)
+
+automl_models_h2o <- h2o.automl(
+    x = x,
+    y = y,
+    training_frame = train_h2o,
+    validation_frame = valid_h2o,
+    max_runtime_secs = 20,
+    nfolds = 5
+)
+
+# Get the best model
+
+model = h2o.getModel('GLM_grid_0_AutoML_20190102_180812_model_0')
+
+# Predict
+
+predictions = h2o.predict(model, newdata = as.h2o(test_tbl))
+
+# Get the performance
+
+performance_h2o <- h2o.performance(model, newdata = as.h2o(test_tbl))
 
 
+```
+
+**Confusion Matrix on test set**
+
+| | No | Yes | Error | Rate |
+| --- | --- | --- | --- |
+| No | 171 | 13 | 0.070652 = 13/184 |
+| Yes | 13 | 23 | 0.361111 = 13/36 |
+| Totals | 184 | 36 | 0.118182 = 26/220 |
+
+![](Pictures/6.pnh)
 
 ## Thanks
 
