@@ -182,7 +182,7 @@ Now let us assume that the company build a predictive model using data from prev
 
 ![](Pictures/8.png)
 
-As can be seen, results from the second table are significantly better than those indicated in the first table. Which shows that the company can target the possible customers more precisely. [source: Explaination of Gain & Lift](http://themainstreamseer.blogspot.com/2012/07/understanding-and-interpreting-gain-and.html).
+As can be seen, results from the second table are significantly better than those indicated in the first table. Which shows that the company can target the possible customers more precisely. [source: Explanation of Gain & Lift](http://themainstreamseer.blogspot.com/2012/07/understanding-and-interpreting-gain-and.html).
 
 We can calculate the Gain & Lift by the following codes:
 
@@ -209,6 +209,8 @@ calculated_gain_lift_tbl <- ranked_predictions_tbl %>%
 ```
 
 ![](Pictures/9.png)
+
+From the above plot, we can find that we can simply get nearly 75% of gains by focusing on the top 25% of employees.
 
 
 ## Thanks
