@@ -6,13 +6,13 @@
 
 Employee turnover is a huge problem becasue employee is organizations' most valualbe resources. That's begin with the employee value overtime.
 
-![](Pictures/1.png)
+<img src="Pictures/1.png" width="700">
 
 [source](https://www.linkedin.com/pulse/20130816200159-131079-employee-retention-now-a-big-issue-why-the-tide-has-turned/)
 
 What this chart shows us is that as time continues, the organization's value increases while the emplyee become even more productive member. Let's simplify the plots and see what happen if an emplyee leaves.
 
-![](Pictures/2.png)
+<img src="Pictures/2.png" width="700">
 
 [source: Business Science University](https://www.business-science.io/)
 
@@ -120,7 +120,7 @@ train_tbl %>%
   geom_label(aes(label = round(Attrition_Yes,2), x = Attrition_Yes, y = features))
 ```
 
-![](Pictures/5.png)
+<img src="Pictures/5.png" width="600">
 
 ## Modeling
 
@@ -207,7 +207,7 @@ calculated_gain_lift_tbl <- ranked_predictions_tbl %>%
     )
 ```
 
-![](Pictures/9.png)
+<img src="Pictures/9.png" width="600">
 
 From the above plot, we can find that we can simply get nearly 75% of gains by focusing on the top 25% of employees.
 
@@ -244,7 +244,7 @@ explanation <- test_tbl %>%
 plot_explanations(explanation)
 ```
 
-<img src="Pictures/10.png" width="500">
+<img src="Pictures/10.png" width="600">
 
 From the above plot, we can see that the feature weights on the selected 20 people could be either **postive: support (green)** or **negative: against (red)**. For example, **OverTime = Yes** has negative weights (against) for not leaving and positive weights (support) for leaving.
 
