@@ -255,6 +255,23 @@ From the above plot, we can see that the feature weights on the selected 20 peop
 
 ## Calculating The Expected ROI (Savings) Of A Policy Change
 
+In the end of last section, we found that the predictors - **OverTime = Yes** played a crucial role on the predition. So it would be reasonable to consider that if the company change the policy of **Overtime**, the attrition rate would decrease or not? Furthermore, if the company change the policy of **Overtime**, the company can save more money or not? Therefore, in this section, we will focus on the expected ROI (Savings) Of a policy change.
+
+First, we calculate the expected values with **OverTime**, and output the results (the first 10) in table:
+
+ | predict  |  No   |   Yes  | EmployeeNumber |  OverTime | attrition_cost | cost_of_policy_change | expected_attrition_cost |
+ |    ---   |  ---  |  ---   |       ---      |     ---   |       ---      |          ---          |           ---           |
+ | No       |0.981  | 0.0195 |            228 |   No      |         72979. |                    0  |                1420. |
+ | No       |0.803  |0.197   |           1278 |   Yes     |         64663. |                    0  |               12753. |
+ | No       |0.999  |0.00088 |           1250 |   No      |         56259. |                    0  |                 49.8 |
+ | No       |0.974  |0.0260  |           2065 |   No      |         81037. |                    0  |                2110. |
+ | Yes      |0.338  |0.662   |           1767 |   Yes     |         86943. |                    0  |               57577. |
+ | No       |0.923  |0.0766  |           1308 |   No      |         87073. |                    0  |                6674. |
+ | No       |0.956  |0.0442  |             18 |   No      |         86495. |                    0  |                3819. |
+ | No       |0.988  |0.0123  |            460 |   No      |         79123. |                    0  |                 975. |
+ | No       |0.995  |0.00510 |           1369 |   No      |         81091. |                    0  |                 414. |
+ | No       |0.995  |0.00527 |           1040 |   No      |         79123. |                    0  |                 417. |
+
 
 
 ## Thanks
