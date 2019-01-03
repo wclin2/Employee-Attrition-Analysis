@@ -67,9 +67,23 @@ First, we can use histogram plot to check the distribution of our predictors. Fr
 
 Second, we scale and center the predictors. In general scaling the data would not hurt the model performance. Also, some of the algorithms would benefit a lot by scaling, such as KMeans, SVM, Deep Learning ... Third, we convert the categorical predictors into dummy variables since most of the algorithms need continuous inputs.
 
-These problem can be solved by the R package <recipe>, then we plot the histogram again (Not include the dummy variables)
+These problem can be solved by the R package `recipe`, then we plot the histogram again (Not include the dummy variables).
 
 ```
+# Load the data
+
+train_raw_tbl       <- read_excel(path_train, sheet = 1)
+test_raw_tbl        <- read_excel(path_test, sheet = 1)
+definitions_raw_tbl <- read_excel(path_data_definitions, sheet = 1, col_names = FALSE)
+
+# Some Preprcessing
+
+source("00_Scripts/data_processing_pipeline.R")
+train_readable_tbl <- process_hr_data_readable(train_raw_tbl, definitions_raw_tbl)
+test_readable_tbl  <- process_hr_data_readable(test_raw_tbl, definitions_raw_tbl)
+
+# Recipe
+
 recipe_obj <- recipe(Attrition ~ ., data = train_readable_tbl) %>%
     step_zv(all_predictors()) %>%
     step_YeoJohnson(skewed_feature_names) %>%
@@ -78,11 +92,14 @@ recipe_obj <- recipe(Attrition ~ ., data = train_readable_tbl) %>%
     step_scale(all_numeric()) %>%
     step_dummy(all_nominal()) %>%
     prep()
+
+train_tbl <- bake(recipe_obj, new_data = train_readable_tbl)
+test_tbl  <- bake(recipe_obj, new_data = test_readable_tbl)
 ```
 
 ![](Pictures/4.png)
 
-Last, we will conduct the correlation evaluation. Although some of the predictors might have non-linear relationship with the target values, knowing which predictor has large correlation with the target could still be beneficial for interpretation
+Last, we will conduct the correlation evaluation. Although some of the predictors might have non-linear relationship with the target values, knowing which predictor has large correlation with the target could still be beneficial for interpretation.
 
 ```
 train_tbl %>%
@@ -106,6 +123,8 @@ train_tbl %>%
 ![](Pictures/5.png)
 
 ## Modeling
+
+In this section, we use the R package `h2o` to build the models.
 
 
 
