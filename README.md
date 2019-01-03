@@ -259,6 +259,36 @@ In the end of last section, we found that the predictors - **OverTime = Yes** pl
 
 First, we calculate the expected values with **OverTime**, and output the results (the first 10) in table:
 
+```
+predictions_with_OT_tbl <- model %>%
+    h2o.predict(newdata = as.h2o(test_tbl)) %>%
+    as.tibble() %>%
+    bind_cols(
+        test_tbl %>%
+            select(EmployeeNumber, MonthlyIncome, OverTime)
+    )
+
+# Calculate the expected cost
+
+ev_with_OT_tbl <- predictions_with_OT_tbl %>%
+    mutate(
+        attrition_cost = calculate_attrition_cost(
+            n = 1,
+            salary = MonthlyIncome * 12,
+            net_revenue_per_employee = 250000
+        )
+    ) %>%
+    mutate(
+        cost_of_policy_change = 0 
+    ) %>%
+    mutate(
+        expected_attrition_cost = 
+            Yes * (attrition_cost + cost_of_policy_change) +
+            No *  (cost_of_policy_change)
+    ) %>%
+    select(-MonthlyIncome)
+```
+
  | predict  |  No   |   Yes  | EmployeeNumber |  OverTime | attrition_cost | cost_of_policy_change | expected_attrition_cost |
  |    ---   |  ---  |  ---   |       ---      |     ---   |       ---      |          ---          |           ---           |
  | No       |0.981  | 0.0195 |            228 |   No      |         72979. |                    0  |                1420. |
@@ -276,18 +306,69 @@ First, we calculate the expected values with **OverTime**, and output the result
 
 Second, we calculate the expected values without **OverTime**, and output the results (the first 10) in table:
 
- | predict  |  No   |   Yes    | EmployeeNumber |  OverTime | attrition_cost  | cost_of_policy_change | expected_attrition_cost |
- |    ---   |  ---  |  ---     |       ---      |     ---   |       ---       |          ---          |           ---           |
- |    No    |  0.981 |   1.95e-2 |           228  |    No      |           72979. |              0        |    1420. |
- |    No    |  0.952 |   4.82e-2 |          1278  |    No      |           64663. |           6466.       |    9586. |
- |    No    |  0.999 |   8.84e-4 |          1250  |    No      |           56259. |              0        |     49.8 |
- |    No    |  0.974 |   2.60e-2 |          2065  |    No      |           81037. |              0        |    2110. |
- |    No    |  0.712 |   2.88e-1 |          1767  |    No      |           86943. |           8694.       |   33735. |
- |    No    |  0.923 |   7.66e-2 |          1308  |    No      |           87073. |              0        |    6674. |
- |    No    |  0.956 |   4.42e-2 |            18  |    No      |           86495. |              0        |    3819. |
- |    No    |  0.988 |   1.23e-2 |           460  |    No      |           79123. |              0        |     975. |
- |    No    |  0.995 |   5.10e-3 |          1369  |    No      |           81091. |              0        |     414. |
- |    No    |  0.995 |   5.27e-3 |          1040  |    No      |           79123. |              0        |     417. |
+```
+# Convert all the 'Yes' to 'No' in the feature - OverTime
+
+test_without_OT_tbl <- test_tbl %>%
+    mutate(OverTime = fct_recode(OverTime, "No" = "Yes")) 
+
+# Predict
+
+predictions_without_OT_tbl <- model %>%
+    h2o.predict(newdata = as.h2o(test_without_OT_tbl)) %>%
+    as.tibble() %>%
+    bind_cols(
+        test_tbl %>%
+            select(EmployeeNumber, MonthlyIncome, OverTime),
+        test_without_OT_tbl %>%
+            select(OverTime)
+    ) %>%
+    rename(
+        OverTime_0 = OverTime,
+        OverTime_1 = OverTime1
+    )
+
+# Set the overtime percent as 0.10
+
+avg_overtime_pct <- 0.10
+
+# Calculate the expected cost
+
+ev_without_OT_tbl <- predictions_without_OT_tbl %>%
+    mutate(
+        attrition_cost = calculate_attrition_cost(
+            n = 1,
+            salary = MonthlyIncome * 12,
+            net_revenue_per_employee = 250000
+        )
+    ) %>%
+    mutate(
+        cost_of_policy_change = case_when(
+            OverTime_0 == "Yes" & OverTime_1 == "No" ~ avg_overtime_pct * attrition_cost,
+            TRUE ~ 0
+        ) 
+    ) %>%
+    mutate(
+        expected_attrition_cost = 
+            Yes * (attrition_cost + cost_of_policy_change) +
+            No *  (cost_of_policy_change)
+    ) %>%
+    rename(OverTime = OverTime_1) %>%
+    select(-MonthlyIncome, -OverTime_0)
+```
+
+ | predict  |  No   |   Yes       | EmployeeNumber |  OverTime | attrition_cost  | cost_of_policy_change | expected_attrition_cost |
+ |    ---   |  ---  |  ---        |       ---      |     ---   |       ---       |          ---          |           ---           |
+ |    No    |  0.981 |   0.0195   |           228  |    No      |           72979. |              0        |    1420. |
+ |    No    |  0.952 |   0.0482   |          1278  |    No      |           64663. |           6466.       |    9586. |
+ |    No    |  0.999 |   0.000884 |          1250  |    No      |           56259. |              0        |     49.8 |
+ |    No    |  0.974 |   0.026    |          2065  |    No      |           81037. |              0        |    2110. |
+ |    No    |  0.712 |   0.28     |          1767  |    No      |           86943. |           8694.       |   33735. |
+ |    No    |  0.923 |   0.0766   |          1308  |    No      |           87073. |              0        |    6674. |
+ |    No    |  0.956 |   0.0442   |            18  |    No      |           86495. |              0        |    3819. |
+ |    No    |  0.988 |   0.0123   |           460  |    No      |           79123. |              0        |     975. |
+ |    No    |  0.995 |   0.005    |          1369  |    No      |           81091. |              0        |     414. |
+ |    No    |  0.995 |   0.005    |          1040  |    No      |           79123. |              0        |     417. |
 
 - the total expected attrition cost without **OverTime** would be around 2714538
 - Therefore the company can save around $378450 (12.2% savings)
