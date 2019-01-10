@@ -525,8 +525,9 @@ Therefore, in this section, we are trying to figure out how different values of 
 max_savings_rates_tbl <- rates_by_threshold_optimized_tbl %>%
     filter(savings == max(savings))
 
-# Here we modify the function `calculate_savings_by_threshold` by adding two input parameters: avg_overtime_pct and net_revenue_per_employee,
-# so we can see the how they impact the expected savings
+# Here, we modify the function `calculate_savings_by_threshold` 
+# by adding two input parameters: avg_overtime_pct and net_revenue_per_employee.
+# Therefore, we can see that how they impact the expected savings with different values.
 
 # Preload the function `calculate_savings_by_threshold_2`
 
