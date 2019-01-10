@@ -1,13 +1,13 @@
 # Employee Attrition Analysis
 
-## Goal
+## A. Goal
 
 The goals of this post is to predict the probability of attrition for each employee and extract some business insights from the data such as calculating ROI and Gain & Lift, generating recommendations etc.  
-## Data
+## B. Data
  
 The Data has 1350 rows and 35 features (including target) which could be downloaded from [here](https://www.ibm.com/communities/analytics/watson-analytics-blog/hr-employee-attrition/). 
 
-## Why is this imporatnt?
+## C. Why is this imporatnt?
 
 > **"You take away our top 20 emplyees and we becomde a mediocre company"**  - Bill Gates
 
@@ -64,7 +64,7 @@ Therefore, the **Estimated Attrition Cost Per Employee** would be **$78.483**
 If 200 employees turnover, it would cost the company **$15.7M Per Year**.
 
 
-## Data Understaninf & Preparation
+## D. Data Understaninf & Preparation
 
 First, we can use histogram plot to check the distribution of our predictors. From the below plot, we can notice that,
 - There are some zero-variance predictors which will be deleted later (Employee Count, Over 18, Standard Hours). 
@@ -131,7 +131,7 @@ train_tbl %>%
 ![](Pictures/5.png)
 
 
-## Modeling
+## E. Modeling
 
 In this section, we use the R package `h2o` to build the models. There are many parameters that can be tunes to get better performance, but that is not the goal of this post. Therefore, I just use the default for the parameters.
 
@@ -180,7 +180,7 @@ performance_h2o <- h2o.performance(model, newdata = as.h2o(test_tbl))
 
 <img src="Pictures/6.png" width="600">
 
-## Gain & Lift
+## F. Gain & Lift
 
 Gain & Lift Charts are a useful way of visualizing how good a predictive model is. Most Important thing is that Gain & Lift charts can be used to help company make decision. For example, let us assume that the company mails out ads in lots of 10,000. Based on these assumptions, if the company mails out 100,000 ads, a table summarizing the results it would obtain from this campaign is provided below
 
@@ -220,7 +220,7 @@ calculated_gain_lift_tbl <- ranked_predictions_tbl %>%
 
 From the above plot, we can find that we can simply get nearly 75% of gains by focusing on the top 25% of employees.
 
-## Feature Weight
+## G. Feature Weight
 
 In this section, we use R package `lime` to calculate the feature weights. `lime` is used to determine which featurs contribute to the prediction for a single observation or multiple observation (i.e. Local).  
 
@@ -257,7 +257,7 @@ plot_explanations(explanation)
 
 From the above plot, we can see that the feature weights on the selected 20 people could be either **postive: support (green)** or **negative: against (red)**. For example, **OverTime = Yes** has **negative weights (against)** for not leaving and **positive weights (support)** for leaving.
 
-## Calculating The Expected ROI (Savings) Of A Policy Change
+## H. Calculating The Expected ROI (Savings) Of A Policy Change
 
 In the end of last section, we found that the predictors - **OverTime = Yes** played a crucial role on the predition. So it would be reasonable to consider that if the company change the policy of **Overtime**, the attrition rate would decrease or not? Furthermore, if the company change the policy of **Overtime**, the company can save more money or not? Therefore, in this section, we will focus on the expected ROI (Savings) Of a policy change.
 
@@ -308,7 +308,7 @@ Second, we consider two cases,
 1. Convert all **OverTime = Yes** to **OverTime = No**
 2. Only focus on the employee with attrition possibility. In this case, we need to figure out the threshold.
 
-### First Case
+### H.1. First Case
 
 Calculate the expected values without **OverTime**, and output the results (the first 5) in table:
 
@@ -374,7 +374,7 @@ ev_without_OT_tbl <- predictions_without_OT_tbl %>%
 - From the 2nd and 5th observations, we can find that the possibility of attrition decrease after turning **OverTime = Yes** to **OverTime = No**
 - The total expected attrition cost without **OverTime** would be around $281,959
 
-### Second Case
+### H.2. Second Case
 
 We only focus on the employee with high attrition possibility.
 
@@ -473,7 +473,7 @@ ev_targeted_OT_tbl <- predictions_targeted_OT_tbl %>%
 - Therefore the company can save around $456,783.
 - With more appropriate strategy, the company can save more.
 
-### Further Improvement
+### H.3. Further Improvement
 
 In last case, we select the threshold with the highest F1 score (Balance between **Precision** and **Recall**). However, in the real world, **Recall** have the greater impact on the response (savings) compared to **Precision**. Therefore, this time, we try to optimize the threshold by maximizing the savings and compare the result with the previous one (Maximized F1 score).
 
@@ -511,15 +511,15 @@ rates_by_threshold_optimized_tbl <- rates_by_threshold_tbl %>%
 - Green Circle: Expected Saving Maximized; Blue Line: Expected F1 Score Maximized
 - From the above plot, we can clearly see that by carefully optimzing the threshold, the company can save even more.
 
-## Sensitivity Analysis
+## I. Sensitivity Analysis
 
 (Continue)
 
-## Recommendation
+## J. Recommendation
 
 (Continue)
 
-## Thanks
+## K. Thanks
 
 This project is one of the courses from [Business Science University](https://www.business-science.io/). Really learned a lot from this course!!
 
