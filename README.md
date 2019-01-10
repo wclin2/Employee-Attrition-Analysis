@@ -261,7 +261,7 @@ From the above plot, we can see that the feature weights on the selected 20 peop
 
 In the end of last section, we found that the predictors - **OverTime = Yes** played a crucial role on the predition. So it would be reasonable to consider that if the company change the policy of **Overtime**, the attrition rate would decrease or not? Furthermore, if the company change the policy of **Overtime**, the company can save more money or not? Therefore, in this section, we will focus on the expected ROI (Savings) Of a policy change.
 
-First, we calculate the expected values with **OverTime**, and output the results (the first 10) in table:
+First, we calculate the expected values with **OverTime**, and output the results (the first 5) in table:
 
 ```
 predictions_with_OT_tbl <- model %>%
@@ -300,15 +300,17 @@ ev_with_OT_tbl <- predictions_with_OT_tbl %>%
  | No       |0.999  |0.00088 |           1250 |   No      |         56259. |                    0  |                 49.8 |
  | No       |0.974  |0.0260  |           2065 |   No      |         81037. |                    0  |                2110. |
  | Yes      |0.338  |0.662   |           1767 |   Yes     |         86943. |                    0  |               57577. |
- | No       |0.923  |0.0766  |           1308 |   No      |         87073. |                    0  |                6674. |
- | No       |0.956  |0.0442  |             18 |   No      |         86495. |                    0  |                3819. |
- | No       |0.988  |0.0123  |            460 |   No      |         79123. |                    0  |                 975. |
- | No       |0.995  |0.00510 |           1369 |   No      |         81091. |                    0  |                 414. |
- | No       |0.995  |0.00527 |           1040 |   No      |         79123. |                    0  |                 417. |
+
 
 - the total expected attrition cost with **OverTime** would be around 3092989
 
-Second, we calculate the expected values without **OverTime**, and output the results (the first 10) in table:
+Second, we consider two cases, 
+1. Convert all **OverTime = Yes** to **OverTime = No**
+2. Only focus on the employee with attrition possibility. In this case, we need to figure out the threshold.
+
+#### First Case
+
+Calculate the expected values without **OverTime**, and output the results (the first 5) in table:
 
 ```
 # Convert all the 'Yes' to 'No' in the feature - OverTime
@@ -361,21 +363,156 @@ ev_without_OT_tbl <- predictions_without_OT_tbl %>%
     select(-MonthlyIncome, -OverTime_0)
 ```
 
- | predict  |  No   |   Yes       | EmployeeNumber |  OverTime | attrition_cost  | cost_of_policy_change | expected_attrition_cost |
- |    ---   |  ---  |  ---        |       ---      |     ---   |       ---       |          ---          |           ---           |
- |    No    |  0.981 |   0.0195   |           228  |    No      |           72979. |              0        |    1420. |
- |    No    |  0.952 |   0.0482   |          1278  |    No      |           64663. |           6466.       |    9586. |
- |    No    |  0.999 |   0.000884 |          1250  |    No      |           56259. |              0        |     49.8 |
- |    No    |  0.974 |   0.026    |          2065  |    No      |           81037. |              0        |    2110. |
- |    No    |  0.712 |   0.28     |          1767  |    No      |           86943. |           8694.       |   33735. |
- |    No    |  0.923 |   0.0766   |          1308  |    No      |           87073. |              0        |    6674. |
- |    No    |  0.956 |   0.0442   |            18  |    No      |           86495. |              0        |    3819. |
- |    No    |  0.988 |   0.0123   |           460  |    No      |           79123. |              0        |     975. |
- |    No    |  0.995 |   0.005    |          1369  |    No      |           81091. |              0        |     414. |
- |    No    |  0.995 |   0.005    |          1040  |    No      |           79123. |              0        |     417. |
+ | predict  |  No   |   Yes       | EmployeeNumber | Overtime_0 | OverTime_1 | attrition_cost  | cost_of_policy_change | expected_attrition_cost |
+ |    ---   |  ---  |  ---        |       ---      |       ---       |    ---   |       ---       |          ---          |           ---           |
+ |    No    |  0.981 |   0.0195   |           228  |         No      |   No      |           72979. |              0        |    1420. |
+ |    No    |  0.952 |   0.0482   |          1278  |         Yes     |   No      |           64663. |           6466.       |    9586. |
+ |    No    |  0.999 |   0.000884 |          1250  |         No      |   No      |           56259. |              0        |     49.8 |
+ |    No    |  0.974 |   0.026    |          2065  |         No      |   No      |           81037. |              0        |    2110. |
+ |    No    |  0.712 |   0.28     |          1767  |         Yes     |   No      |           86943. |           8694.       |   33735. |
 
-- the total expected attrition cost without **OverTime** would be around 2714538
-- Therefore the company can save around $378450 (12.2% savings)
+- From the 2nd and 5th observations, we can find that the possibility of attrition decrease after turning **OverTime = Yes** to **OverTime = No**
+- The total expected attrition cost without **OverTime** would be around $281,959
+
+#### Second Case
+
+We only focus on the employee with high attrition possibility.
+
+```
+# Primer: Working With Threshold & Rates 
+
+performance_h2o <- automl_leader %>%
+    h2o.performance(newdata = as.h2o(test_tbl))
+
+performance_h2o %>%
+    h2o.confusionMatrix()
+
+rates_by_threshold_tbl <- performance_h2o %>%
+    h2o.metric() %>%
+    as.tibble()
+
+# We select the threshold with the highest F1 score
+
+max_f1_tbl <- rates_by_threshold_tbl %>%
+    select(threshold, f1, tnr:tpr) %>%
+    filter(f1 == max(f1)) %>%
+    slice(1)
+
+# Calculating Expected Value With Targeted OT 
+
+tnr <- max_f1_tbl$tnr
+fnr <- max_f1_tbl$fnr
+fpr <- max_f1_tbl$fpr
+tpr <- max_f1_tbl$tpr
+threshold <- max_f1_tbl$threshold
+
+# Convert the feature - OverTime based on the threshold
+
+test_targeted_OT_tbl <- test_tbl %>%
+    add_column(Yes = predictions_with_OT_tbl$Yes) %>%
+    mutate(
+        OverTime = case_when(
+            Yes >= threshold ~ factor("No", levels = levels(test_tbl$OverTime)),
+            TRUE ~ OverTime
+        )
+    ) %>%
+    select(-Yes)
+
+predictions_targeted_OT_tbl <- automl_leader %>%
+    h2o.predict(newdata = as.h2o(test_targeted_OT_tbl)) %>%
+    as.tibble() %>%
+    bind_cols(
+        test_tbl %>%
+            select(EmployeeNumber, MonthlyIncome, OverTime),
+        test_targeted_OT_tbl %>%
+            select(OverTime)
+    ) %>%
+    rename(
+        OverTime_0 = OverTime,
+        OverTime_1 = OverTime1
+    )
+
+
+avg_overtime_pct <- 0.10
+
+ev_targeted_OT_tbl <- predictions_targeted_OT_tbl %>%
+    mutate(
+        attrition_cost = calculate_attrition_cost(
+            n = 1,
+            salary = MonthlyIncome * 12,
+            net_revenue_per_employee = 250000
+        )
+    ) %>%
+    mutate(
+        cost_of_policy_change = case_when(
+            OverTime_0 == "Yes" & OverTime_1 == "No" ~ attrition_cost * avg_overtime_pct,
+            TRUE ~ 0
+        )
+    ) %>%
+    mutate(
+        cb_tn = cost_of_policy_change,
+        cb_fp = cost_of_policy_change,
+        cb_tp = cost_of_policy_change + attrition_cost,
+        cb_fn = cost_of_policy_change + attrition_cost,
+        expected_attrition_cost = 
+            Yes * (tpr*cb_tp + fnr*cb_fn) +
+            No *  (tnr*cb_tn + fpr*cb_fp)
+    ) 
+```
+
+ | predict  |  No   |   Yes       | EmployeeNumber | Overtime_0 | OverTime_1 | attrition_cost  | cost_of_policy_change | expected_attrition_cost |
+ |    ---   |  ---  |  ---        |       ---      |       ---       |    ---   |       ---       |          ---          |           ---           |
+| No   |   0.981 | 0.0195 |            228    | No  |       No    |             72979. |  0   | 1420.  |
+| No   |   0.803 | 0.197  |           1278    | Yes |       Yes   |             64663. |  0   |  12753. |
+| No   |   0.999 | 0.0008 |           1250    | No  |       No    |             56259. |  0   |  49.8 |
+| No   |   0.974 | 0.026  |           2065    | No  |       No    |             81037. |  0   |  2110 |
+| No   |   0.712 | 0.288  |           1767    | Yes |       No    |             86943. |  8694|  33735 |
+
+- Only change the **OverTime** policy for the 5th obseravation, since he / she has the possibility of attrition over the threshold.
+- The total expected attrition cost without **OverTime** would be around 2811030. 
+- Therefore the company can save around $456,783.
+- With more appropriate strategy, the company can save more.
+
+#### Further Improvement
+
+In last case, we select the threshold with the highest F1 score (Balance between **Precision** and **Recall**). However, in the real world, **Recall** have the greater impact on the response (savings) compared to **Precision**. Therefore, this time, we try to optimize the threshold by maximizing the savings and compare the result with the previous one (Maximized F1 score).
+
+```
+# Sample the data to speed up the process. In this case, we use 20 samples
+
+smpl <- seq(1, 220, length.out = 20) %>% round(digits = 0)
+
+# We put all the steps, we followed earlier, into one function `calculate_savings_by_threshold` 
+# Preload the function
+
+partial(calculate_savings_by_threshold, data = test_tbl, h2o_model = automl_leader)
+
+# Input the threshold, true negative, false negative, false positive, true postive of the 20 samples into the function
+
+rates_by_threshold_optimized_tbl <- rates_by_threshold_tbl %>%
+    select(threshold, tnr:tpr) %>%
+    slice(smpl) %>%
+    mutate(
+        savings = pmap_dbl(
+            .l = list(
+                threshold = threshold,
+                tnr = tnr,
+                fnr = fnr,
+                fpr = fpr,
+                tpr = tpr
+            ), 
+            .f = partial(calculate_savings_by_threshold, data = test_tbl, h2o_model = automl_leader)
+        )
+    )
+```
+
+<img src="Pictures/11.png" width="600">
+
+- From the above plot, we can clearly see that by carefully optimzing the threshold, the company can save even more.
+
+## Sensitivity Analysis
+
+(Continue)
 
 ## Recommendation
 
