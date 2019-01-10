@@ -259,9 +259,14 @@ From the above plot, we can see that the feature weights on the selected 20 peop
 
 ## H. Calculating The Expected ROI (Savings) Of A Policy Change
 
-In the end of last section, we found that the predictors - **OverTime = Yes** played a crucial role on the predition. So it would be reasonable to consider that if the company change the policy of **Overtime**, the attrition rate would decrease or not? Furthermore, if the company change the policy of **Overtime**, the company can save more money or not? Therefore, in this section, we will focus on the expected ROI (Savings) Of a policy change.
+In the end of last section, we found that the predictors - **OverTime = Yes** played a crucial role on the predition. So it would be reasonable to consider that if the company change the policy of **Overtime**, the attrition rate would decrease or not? Furthermore, if the company change the policy of **Overtime**, the company can save more money or not? In this section, we will focus on the expected ROI (Savings) of a policy change.
 
-First, we calculate the expected values with **OverTime**, and output the results (the first 5) in table:
+The comparisons will be separate into 2 cases:
+1. New Policy - No OverTime **V.S.** Original Policy.
+2. New Policy - Change the policy for the specific employee **V.S.** Original Policy.
+
+
+### H.1 Calculate the expected attrition cost for Original Policy
 
 ```
 predictions_with_OT_tbl <- model %>%
@@ -293,6 +298,8 @@ ev_with_OT_tbl <- predictions_with_OT_tbl %>%
     select(-MonthlyIncome)
 ```
 
+Show the first 5 observations,
+
  | predict  |  No   |   Yes  | EmployeeNumber |  OverTime | attrition_cost | cost_of_policy_change | expected_attrition_cost |
  |    ---   |  ---  |  ---   |       ---      |     ---   |       ---      |          ---          |           ---           |
  | No       |0.981  | 0.0195 |            228 |   No      |         72979. |                    0  |                1420. |
@@ -301,16 +308,9 @@ ev_with_OT_tbl <- predictions_with_OT_tbl %>%
  | No       |0.974  |0.0260  |           2065 |   No      |         81037. |                    0  |                2110. |
  | Yes      |0.338  |0.662   |           1767 |   Yes     |         86943. |                    0  |               57577. |
 
+- The total expected attrition cost of the orginal policy would be around $3,092,989.
 
-- the total expected attrition cost with **OverTime** would be around 3092989
-
-Second, we consider two cases, 
-1. Convert all **OverTime = Yes** to **OverTime = No**
-2. Only focus on the employee with attrition possibility. In this case, we need to figure out the threshold.
-
-### H.1. First Case
-
-Calculate the expected values without **OverTime**, and output the results (the first 5) in table:
+### H.2. New Policy - No OverTime **V.S.** Original Policy
 
 ```
 # Convert all the 'Yes' to 'No' in the feature - OverTime
@@ -363,6 +363,8 @@ ev_without_OT_tbl <- predictions_without_OT_tbl %>%
     select(-MonthlyIncome, -OverTime_0)
 ```
 
+Show the results for the first 5 observations,
+
  | predict  |  No   |   Yes       | EmployeeNumber | Overtime_0 | OverTime_1 | attrition_cost  | cost_of_policy_change | expected_attrition_cost |
  |    ---   |  ---  |  ---        |       ---      |       ---       |    ---   |       ---       |          ---          |           ---           |
  |    No    |  0.981 |   0.0195   |           228  |         No      |   No      |           72979. |              0        |    1420. |
@@ -371,12 +373,12 @@ ev_without_OT_tbl <- predictions_without_OT_tbl %>%
  |    No    |  0.974 |   0.026    |          2065  |         No      |   No      |           81037. |              0        |    2110. |
  |    No    |  0.712 |   0.28     |          1767  |         Yes     |   No      |           86943. |           8694.       |   33735. |
 
-- From the 2nd and 5th observations, we can find that the possibility of attrition decrease after turning **OverTime = Yes** to **OverTime = No**
-- The total expected attrition cost without **OverTime** would be around $281,959
+- From the 2nd and 5th observations, we can find that the possibility of attrition decrease after converting **OverTime = Yes** to **OverTime = No**.
+- Compared to the orginal policy, the expected saving of new policy - without OverTime would be around $281,959.
 
-### H.2. Second Case
+### H.3. New Policy - Change the policy for the specific employee **V.S.** Original Policy
 
-We only focus on the employee with high attrition possibility.
+In this case, we only change the policy for the employees with higher attrition possibility. We use the threshold which has the highest F1 score.
 
 ```
 # Primer: Working With Threshold & Rates 
@@ -460,6 +462,8 @@ ev_targeted_OT_tbl <- predictions_targeted_OT_tbl %>%
     ) 
 ```
 
+Show the results for the first 5 observations,
+
  | predict  |  No   |   Yes       | EmployeeNumber | Overtime_0 | OverTime_1 | attrition_cost  | cost_of_policy_change | expected_attrition_cost |
  |    ---   |  ---  |  ---        |       ---      |       ---       |    ---   |       ---       |          ---          |           ---           |
 | No   |   0.981 | 0.0195 |            228    | No  |       No    |             72979. |  0   | 1420.  |
@@ -468,12 +472,11 @@ ev_targeted_OT_tbl <- predictions_targeted_OT_tbl %>%
 | No   |   0.974 | 0.026  |           2065    | No  |       No    |             81037. |  0   |  2110 |
 | No   |   0.712 | 0.288  |           1767    | Yes |       No    |             86943. |  8694|  33735 |
 
-- Only change the **OverTime** policy for the 5th obseravation, since he / she has the possibility of attrition over the threshold.
-- The total expected attrition cost without **OverTime** would be around 2811030. 
-- Therefore the company can save around $456,783.
+- In the first 5 observations, the policy for the 5th observation cahnges, since he / she has the possibility of attrition over the threshold.
+- Compared to the orginal policy, the expected saving of new policy - Change the policy for the specific employee would be around $456,783.
 - With more appropriate strategy, the company can save more.
 
-### H.3. Further Improvement
+### H.3.1 Further Improvement
 
 In last case, we select the threshold with the highest F1 score (Balance between **Precision** and **Recall**). However, in the real world, **Recall** have the greater impact on the response (savings) compared to **Precision**. Therefore, this time, we try to optimize the threshold by maximizing the savings and compare the result with the previous one (Maximized F1 score).
 
