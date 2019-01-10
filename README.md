@@ -513,7 +513,58 @@ rates_by_threshold_optimized_tbl <- rates_by_threshold_tbl %>%
 
 ## I. Sensitivity Analysis
 
-(Continue)
+In the last section, we have two assumptions:
+1. Net Revenue Per employee = (Revenue - COGS) / (# of Employee) = $250,000
+2. Average OverTime Percent = (Hours Workd - 40) / 40 = 10%
+
+Therefore, in this section, we are trying to figure out how different values of these two parameters affect the expected savings under the selected condition (fixed threshold, false positive rate, model etc.).
+
+```
+# Sensitivity Analysis
+
+max_savings_rates_tbl <- rates_by_threshold_optimized_tbl %>%
+    filter(savings == max(savings))
+
+# Here we modify the function `calculate_savings_by_threshold` by adding two input parameters: avg_overtime_pct and net_revenue_per_employee,
+# so we can see the how they impact the expected savings
+
+# Preload the function `calculate_savings_by_threshold_2`
+
+calculate_savings_by_threshold_2_preloaded <- partial(
+    calculate_savings_by_threshold_2,
+    # Function Arguments
+    data = test_tbl,
+    h2o_model = automl_leader,
+    threshold = max_savings_rates_tbl$threshold,
+    tnr = max_savings_rates_tbl$tnr,
+    fnr = max_savings_rates_tbl$fnr,
+    fpr = max_savings_rates_tbl$fpr,
+    tpr = max_savings_rates_tbl$tpr
+)
+
+# Input the combinations of avg_overtime_pct and net_revenue_per_employee
+# avg_overtime_pct will be a vector of (0.05, 0.1, 0.15, 0.2, 0.25, 0.30)
+# net_revenue_per_employee will be a vector of (200000, 250000, 300000, 350000, 400000)
+
+sensitivity_tbl <- list(
+    avg_overtime_pct = seq(0.05, 0.30, by = 0.05),
+    net_revenue_per_employee = seq(200000, 400000, by = 50000)
+) %>%
+    cross_df() %>%
+    mutate(
+        savings = pmap_dbl(
+            .l = list(
+                avg_overtime_pct = avg_overtime_pct,
+                net_revenue_per_employee = net_revenue_per_employee
+            ),
+            .f = calculate_savings_by_threshold_2_preloaded
+        )
+    )
+```
+
+<img src="Pictures/12.png" width="600">
+
+- From the above plot, we can find the breakeven point is somewhere between 20% - 25% of the average overtime. So as long as the average overtime percentage is less than, say 22.5%, the company will not lose money. 
 
 ## J. Recommendation
 
