@@ -308,7 +308,7 @@ Second, we consider two cases,
 1. Convert all **OverTime = Yes** to **OverTime = No**
 2. Only focus on the employee with attrition possibility. In this case, we need to figure out the threshold.
 
-#### First Case
+### First Case
 
 Calculate the expected values without **OverTime**, and output the results (the first 5) in table:
 
@@ -374,7 +374,7 @@ ev_without_OT_tbl <- predictions_without_OT_tbl %>%
 - From the 2nd and 5th observations, we can find that the possibility of attrition decrease after turning **OverTime = Yes** to **OverTime = No**
 - The total expected attrition cost without **OverTime** would be around $281,959
 
-#### Second Case
+### Second Case
 
 We only focus on the employee with high attrition possibility.
 
@@ -473,7 +473,7 @@ ev_targeted_OT_tbl <- predictions_targeted_OT_tbl %>%
 - Therefore the company can save around $456,783.
 - With more appropriate strategy, the company can save more.
 
-#### Further Improvement
+### Further Improvement
 
 In last case, we select the threshold with the highest F1 score (Balance between **Precision** and **Recall**). However, in the real world, **Recall** have the greater impact on the response (savings) compared to **Precision**. Therefore, this time, we try to optimize the threshold by maximizing the savings and compare the result with the previous one (Maximized F1 score).
 
@@ -508,6 +508,7 @@ rates_by_threshold_optimized_tbl <- rates_by_threshold_tbl %>%
 
 <img src="Pictures/11.png" width="600">
 
+- Green Circle: Expected Saving Maximized; Blue Line: Expected F1 Score Maximized
 - From the above plot, we can clearly see that by carefully optimzing the threshold, the company can save even more.
 
 ## Sensitivity Analysis
