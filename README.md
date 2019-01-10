@@ -514,8 +514,8 @@ rates_by_threshold_optimized_tbl <- rates_by_threshold_tbl %>%
 ## I. Sensitivity Analysis
 
 In the last section, we have two assumptions:
-1. Net Revenue Per employee = $(Revenue - COGS) / (# of Employee)$ = $250,000
-2. Average OverTime Percent = $(Hours Workd - 40) / 40$ = 10%
+1. Net Revenue Per employee = (Revenue - COGS) / (# of Employee) = $250,000
+2. Average OverTime Percent = (Hours Workd - 40) / 40 = 10%
 
 Therefore, in this section, we are trying to figure out how different values of these two parameters affect the expected savings under the selected condition (fixed threshold, false positive rate, model etc.).
 
