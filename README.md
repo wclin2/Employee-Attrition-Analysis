@@ -262,8 +262,8 @@ From the above plot, we can see that the feature weights on the selected 20 peop
 In the end of last section, we found that the predictors - **OverTime = Yes** played a crucial role on the predition. So it would be reasonable to consider that if the company change the policy of **Overtime**, the attrition rate would decrease or not? Furthermore, if the company change the policy of **Overtime**, the company can save more money or not? In this section, we will focus on the expected ROI (Savings) of a policy change.
 
 The comparisons will be separate into 2 cases:
-1. New Policy - No OverTime **V.S.** Original Policy.
-2. New Policy - Change the policy for the specific employee **V.S.** Original Policy.
+1. **New Policy 1 - No OverTime** V.S. **Original Policy**.
+2. **New Policy 2 - Changes For The Specific Employee** V.S. **Original Policy**.
 
 
 ### H.1 Calculate the expected attrition cost for Original Policy
@@ -308,9 +308,9 @@ Show the first 5 observations,
  | No       |0.974  |0.0260  |           2065 |   No      |         81037. |                    0  |                2110. |
  | Yes      |0.338  |0.662   |           1767 |   Yes     |         86943. |                    0  |               57577. |
 
-- The total expected attrition cost of the orginal policy would be around $3,092,989.
+- The total expected attrition cost of the **Orginal Policy** would be around $3,092,989.
 
-### H.2. New Policy - No OverTime **V.S.** Original Policy
+### H.2. New Policy 1 - No OverTime V.S. Original Policy
 
 ```
 # Convert all the 'Yes' to 'No' in the feature - OverTime
@@ -374,9 +374,9 @@ Show the results for the first 5 observations,
  |    No    |  0.712 |   0.28     |          1767  |         Yes     |   No      |           86943. |           8694.       |   33735. |
 
 - From the 2nd and 5th observations, we can find that the possibility of attrition decrease after converting **OverTime = Yes** to **OverTime = No**.
-- Compared to the orginal policy, the expected saving of new policy - without OverTime would be around $281,959.
+- Compared to the **Orginal Policy**, the expected saving of **New Policy 1 - No OverTime** would be around $281,959.
 
-### H.3. New Policy - Change the policy for the specific employee **V.S.** Original Policy
+### H.3. New Policy 2 - Changes For The Specific Employee V.S. Original Policy
 
 In this case, we only change the policy for the employees with higher attrition possibility. We use the threshold which has the highest F1 score.
 
@@ -473,12 +473,12 @@ Show the results for the first 5 observations,
 | No   |   0.712 | 0.288  |           1767    | Yes |       No    |             86943. |  8694|  33735 |
 
 - In the first 5 observations, the policy for the 5th observation cahnges, since he / she has the possibility of attrition over the threshold.
-- Compared to the orginal policy, the expected saving of new policy - Change the policy for the specific employee would be around $456,783.
+- Compared to the **Orginal Policy**, the expected saving of **New Policy 2 - Changes For The Specific Employee** would be around $456,783.
 - With more appropriate strategy, the company can save more.
 
 ### H.3.1 Further Improvement
 
-In last case, we select the threshold with the highest F1 score (Balance between **Precision** and **Recall**). However, in the real world, **Recall** have the greater impact on the response (savings) compared to **Precision**. Therefore, this time, we try to optimize the threshold by maximizing the savings and compare the result with the previous one (Maximized F1 score).
+In last case, we select the threshold with the highest **F1 score** which strikes the balance between **Precision** and **Recall**. However, in the real world, **Recall** have the greater impact on the response (savings) compared to **Precision**. Therefore, this time, we try to optimize the threshold by maximizing the savings and compare the result with the previous one (Maximized **F1 score**).
 
 ```
 # Sample the data to speed up the process. In this case, we use 20 samples
