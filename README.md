@@ -576,7 +576,7 @@ sensitivity_tbl <- list(
 
 ## K. Thanks
 
-This project is one of the courses from [Business Science University](https://www.business-science.io/). I really enjoyed the journey, improved my coding skills and learned the business sense. Many thanks to [Matt Dancho](https://www.linkedin.com/in/mattdancho/) and [Business Science University](https://www.business-science.io/) for putting this together.
+This project is one of the courses from [Business Science University](https://www.business-science.io/). I really enjoyed the journey, improved my coding skills and developed the business sense. Many thanks to [Matt Dancho](https://www.linkedin.com/in/mattdancho/) and [Business Science University](https://www.business-science.io/) for putting this together.
 
 
 
