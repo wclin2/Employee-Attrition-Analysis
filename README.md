@@ -64,7 +64,7 @@ Therefore, the **Estimated Attrition Cost Per Employee** would be **$78.483**
 If 200 employees turnover, it would cost the company **$15.7M Per Year**.
 
 
-## D. Data Understaninf & Preparation
+## D. Data Understanding & Preparation
 
 First, we can use histogram plot to check the distribution of our predictors. From the below plot, we can notice that,
 - There are some zero-variance predictors which will be deleted later (Employee Count, Over 18, Standard Hours). 
